@@ -1,0 +1,158 @@
+
+C:/Labs/ECE243/Lab3/Part4/part4.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+/* Program that converts a binary number to decimal */
+			.text // executable code follows
+			.global _start
+_start:
+			MOV R4, #N
+   0:	e3a040f0 	mov	r4, #240	; 0xf0
+			MOV R5, #Digits 	// R5 points to the decimal digits storage location
+   4:	e3a050f4 	mov	r5, #244	; 0xf4
+			LDR R4, [R4] 		// R4 holds N
+   8:	e5944000 	ldr	r4, [r4]
+			MOV R0, R4 			// parameter for DIVIDE goes in R0
+   c:	e1a00004 	mov	r0, r4
+			MOV R1, #10			// Default divisor
+  10:	e3a0100a 	mov	r1, #10
+			CMP R0, #100 		// Is R0 > 100?
+  14:	e3500064 	cmp	r0, #100	; 0x64
+			MOVGE R1, #100		// Yes: Set divisor to 100
+  18:	a3a01064 	movge	r1, #100	; 0x64
+			CMP R0, #1000 		// Is R0 > 1000?
+  1c:	e3500ffa 	cmp	r0, #1000	; 0x3e8
+			MOVGE R1, #1000		// Yes: Set divisor to 1000
+  20:	a3a01ffa 	movge	r1, #1000	; 0x3e8
+			BL DIVIDE
+  24:	eb000004 	bl	3c <DIVIDE>
+			STRB R3, [R5, #3] 	// Thousands digit is in R3
+  28:	e5c53003 	strb	r3, [r5, #3]
+			STRB R2, [R5, #2] 	// Hundreds digit is in R2
+  2c:	e5c52002 	strb	r2, [r5, #2]
+			STRB R1, [R5, #1] 	// Tens digit is in R1
+  30:	e5c51001 	strb	r1, [r5, #1]
+			STRB R0, [R5] 		// Ones digit is in R0
+  34:	e5c50000 	strb	r0, [r5]
+
+00000038 <END>:
+			END: B END
+  38:	eafffffe 	b	38 <END>
+
+0000003c <DIVIDE>:
+
+/* Subroutine to perform the integer division R0 / R1.
+* Returns: quotient in R3, R2, R1, and remainder in R0
+*/
+DIVIDE: 	MOV R6, LR 			// R6 stores return address
+  3c:	e1a0600e 	mov	r6, lr
+			MOV R7, #1			// R7 stores num times we need to divide
+  40:	e3a07001 	mov	r7, #1
+			CMP R1, #100 		// Divisor is 100?
+  44:	e3510064 	cmp	r1, #100	; 0x64
+			MOVEQ R7, #3		// Yes: Need to divide 2 times
+  48:	03a07003 	moveq	r7, #3
+			CMP R1, #1000		// Divisor is 1000?
+  4c:	e3510ffa 	cmp	r1, #1000	; 0x3e8
+			MOVEQ R7, #4		// Yes: Need to divide 3 times
+  50:	03a07004 	moveq	r7, #4
+			MOV R8, R7 			// Copy to know how many divisions were done
+  54:	e1a08007 	mov	r8, r7
+			BL DIVIDE_10
+  58:	eb00001c 	bl	d0 <DIVIDE_10>
+			MOV R9, R0			// R9 stores 1's digit
+  5c:	e1a09000 	mov	r9, r0
+			SUBS R7, #1
+  60:	e2577001 	subs	r7, r7, #1
+			BEQ DIV_DONE		// Need to keep dividing
+  64:	0a00000e 	beq	a4 <DIV_DONE>
+			MOV R0, R1			// Move last remainder into R0
+  68:	e1a00001 	mov	r0, r1
+			BL DIVIDE_10
+  6c:	eb000017 	bl	d0 <DIVIDE_10>
+			MOV R10, R0			// R10 stores 10's digit
+  70:	e1a0a000 	mov	r10, r0
+			SUBS R7, #1
+  74:	e2577001 	subs	r7, r7, #1
+			BEQ DIV_DONE
+  78:	0a000009 	beq	a4 <DIV_DONE>
+			MOV R0, R1
+  7c:	e1a00001 	mov	r0, r1
+			BL DIVIDE_10
+  80:	eb000012 	bl	d0 <DIVIDE_10>
+			MOV R11, R0			// R11 stores 100's digit
+  84:	e1a0b000 	mov	r11, r0
+			SUBS R7, #1
+  88:	e2577001 	subs	r7, r7, #1
+			BEQ DIV_DONE
+  8c:	0a000004 	beq	a4 <DIV_DONE>
+			MOV R0, R1
+  90:	e1a00001 	mov	r0, r1
+			BL DIVIDE_10
+  94:	eb00000d 	bl	d0 <DIVIDE_10>
+			MOV R12, R0			// R12 stores 1000's digit
+  98:	e1a0c000 	mov	r12, r0
+			SUBS R7, #1
+  9c:	e2577001 	subs	r7, r7, #1
+			B DIV_DONE
+  a0:	eaffffff 	b	a4 <DIV_DONE>
+
+000000a4 <DIV_DONE>:
+
+DIV_DONE:	MOV R0, R9
+  a4:	e1a00009 	mov	r0, r9
+			SUBS R8, #1
+  a8:	e2588001 	subs	r8, r8, #1
+			MOVEQ PC, R6
+  ac:	01a0f006 	moveq	pc, r6
+			MOV R1, R10
+  b0:	e1a0100a 	mov	r1, r10
+			SUBS R8, #1
+  b4:	e2588001 	subs	r8, r8, #1
+			MOVEQ PC, R6
+  b8:	01a0f006 	moveq	pc, r6
+			MOV R2, R11
+  bc:	e1a0200b 	mov	r2, r11
+			SUBS R8, #1
+  c0:	e2588001 	subs	r8, r8, #1
+			MOVEQ PC, R6
+  c4:	01a0f006 	moveq	pc, r6
+			MOV R3, R12
+  c8:	e1a0300c 	mov	r3, r12
+			MOV PC, R6
+  cc:	e1a0f006 	mov	pc, r6
+
+000000d0 <DIVIDE_10>:
+
+/* Subroutine to perform the integer division R0 / 10.
+* Returns: quotient in R1, and remainder in R0
+*/
+DIVIDE_10: 	MOV R2, #0
+  d0:	e3a02000 	mov	r2, #0
+
+000000d4 <CONT>:
+CONT: 		CMP R0, #10
+  d4:	e350000a 	cmp	r0, #10
+			BLT DIV_END
+  d8:	ba000002 	blt	e8 <DIV_END>
+			SUB R0, #10
+  dc:	e240000a 	sub	r0, r0, #10
+			ADD R2, #1
+  e0:	e2822001 	add	r2, r2, #1
+			B CONT
+  e4:	eafffffa 	b	d4 <CONT>
+
+000000e8 <DIV_END>:
+DIV_END: 	MOV R1, R2 			// quotient in R1 (remainder in R0)
+  e8:	e1a01002 	mov	r1, r2
+			MOV PC, LR
+  ec:	e1a0f00e 	mov	pc, lr
+
+000000f0 <N>:
+  f0:	00002694 	.word	0x00002694
+
+000000f4 <Digits>:
+  f4:	00000000 	.word	0x00000000

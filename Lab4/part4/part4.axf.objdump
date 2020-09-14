@@ -1,0 +1,276 @@
+
+C:/Labs/ECE243/Lab4/Part4/part4.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+			.text				// executable code follows
+			.global _start                  
+
+_start: 	MOV R5, #0
+   0:	e3a05000 	mov	r5, #0
+			MOV R6, #0
+   4:	e3a06000 	mov	r6, #0
+			MOV R7, #0
+   8:	e3a07000 	mov	r7, #0
+        	MOV R4, #TEST_NUM   // Load data
+   c:	e3a04e1a 	mov	r4, #416	; 0x1a0
+
+00000010 <M_LOOP>:
+M_LOOP:		LDR R1, [R4]        // Load word into R1
+  10:	e5941000 	ldr	r1, [r4]
+			CMP R1, #0			// Check if 0
+  14:	e3510000 	cmp	r1, #0
+			BEQ DISPLAY			// End if 0
+  18:	0a00002e 	beq	d8 <DISPLAY>
+			BL ONES				// Else use ones subroutine
+  1c:	eb00000b 	bl	50 <ONES>
+			CMP R0, R5			// Check if new val is larger
+  20:	e1500005 	cmp	r0, r5
+			MOVGT R5, R0		// If it is store it in r5
+  24:	c1a05000 	movgt	r5, r0
+			LDR R1, [R4]		// Load same val as before
+  28:	e5941000 	ldr	r1, [r4]
+			BL ZEROS			// Use zeros subroutine
+  2c:	eb00000f 	bl	70 <ZEROS>
+			CMP R0, R6			// Check if new val is larger
+  30:	e1500006 	cmp	r0, r6
+			MOVGT R6, R0		// If it is store it in r6
+  34:	c1a06000 	movgt	r6, r0
+			LDR R1, [R4]		// Load same val as before
+  38:	e5941000 	ldr	r1, [r4]
+			BL ALTERNATE		// Use alternate subroutine
+  3c:	eb000014 	bl	94 <ALTERNATE>
+			CMP R0, R7			// Check if new val is larger
+  40:	e1500007 	cmp	r0, r7
+			MOVGT R7, R0		// If it is store it in r7
+  44:	c1a07000 	movgt	r7, r0
+			ADD R4, #4			// Move to next word
+  48:	e2844004 	add	r4, r4, #4
+			B M_LOOP
+  4c:	eaffffef 	b	10 <M_LOOP>
+
+00000050 <ONES>:
+
+ONES:   	MOV R0, #0          // R0 will hold the result
+  50:	e3a00000 	mov	r0, #0
+
+00000054 <O_LOOP>:
+O_LOOP: 	CMP R1, #0          // Loop until the data contains no more 1's
+  54:	e3510000 	cmp	r1, #0
+			BEQ O_END             
+  58:	0a000003 	beq	6c <O_END>
+			LSR R2, R1, #1      // Perform SHIFT, followed by AND
+  5c:	e1a020a1 	lsr	r2, r1, #1
+			AND R1, R1, R2      
+  60:	e0011002 	and	r1, r1, r2
+			ADD R0, #1          // Count the string length so far
+  64:	e2800001 	add	r0, r0, #1
+			B O_LOOP            
+  68:	eafffff9 	b	54 <O_LOOP>
+
+0000006c <O_END>:
+O_END:		MOV PC, LR
+  6c:	e1a0f00e 	mov	pc, lr
+
+00000070 <ZEROS>:
+
+ZEROS:		MOV R0, #0          // R0 will hold the result
+  70:	e3a00000 	mov	r0, #0
+			MVN R1, R1			// Invert r1 to find longest string of 0's
+  74:	e1e01001 	mvn	r1, r1
+
+00000078 <Z_LOOP>:
+Z_LOOP: 	CMP R1, #0          // Loop until the data contains no more 1's
+  78:	e3510000 	cmp	r1, #0
+			BEQ Z_END             
+  7c:	0a000003 	beq	90 <Z_END>
+			LSR R2, R1, #1      // Perform SHIFT, followed by AND
+  80:	e1a020a1 	lsr	r2, r1, #1
+			AND R1, R1, R2      
+  84:	e0011002 	and	r1, r1, r2
+			ADD R0, #1          // Count the string length so far
+  88:	e2800001 	add	r0, r0, #1
+			B Z_LOOP            
+  8c:	eafffff9 	b	78 <Z_LOOP>
+
+00000090 <Z_END>:
+Z_END:		MOV PC, LR
+  90:	e1a0f00e 	mov	pc, lr
+
+00000094 <ALTERNATE>:
+
+
+ALTERNATE:	MOV R0, #0			// Store result in r0
+  94:	e3a00000 	mov	r0, #0
+			MOV R3, #ALT_NUM	// r3 = 01010101....
+  98:	e3a03f67 	mov	r3, #412	; 0x19c
+			LDR R3, [R3]
+  9c:	e5933000 	ldr	r3, [r3]
+			MOV R2, R1			// Copy r1 into r2
+  a0:	e1a02001 	mov	r2, r1
+			EOR R1, R2, R3
+  a4:	e0221003 	eor	r1, r2, r3
+			PUSH {R2, LR}		// Store r2 and our link to main
+  a8:	e92d4004 	push	{r2, lr}
+			BL ONES 			
+  ac:	ebffffe7 	bl	50 <ONES>
+			POP {R2}
+  b0:	e49d2004 	pop	{r2}		; (ldr r2, [sp], #4)
+			LSL R3, #1			// r3 = 10101010.....
+  b4:	e1a03083 	lsl	r3, r3, #1
+			EOR R1, R2, R3
+  b8:	e0221003 	eor	r1, r2, r3
+			PUSH {R0}			// Push our current r0
+  bc:	e52d0004 	push	{r0}		; (str r0, [sp, #-4]!)
+			BL ONES
+  c0:	ebffffe2 	bl	50 <ONES>
+			MOV R1, R0			// Move new r0 into r1
+  c4:	e1a01000 	mov	r1, r0
+			POP {R0}			
+  c8:	e49d0004 	pop	{r0}		; (ldr r0, [sp], #4)
+			CMP R1, R0			// Compare new r0 (r1) with old r0 (r0)
+  cc:	e1510000 	cmp	r1, r0
+			MOVGT R0, R1		// If larger then store new value
+  d0:	c1a00001 	movgt	r0, r1
+			POP {PC}			// Return to main
+  d4:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+
+000000d8 <DISPLAY>:
+
+DISPLAY:    LDR R8, =0xFF200020 // base address of HEX3-HEX0
+  d8:	e59f80ec 	ldr	r8, [pc, #236]	; 1cc <TEST_NUM+0x2c>
+            MOV R0, R5          // display R5 on HEX1-0
+  dc:	e1a00005 	mov	r0, r5
+            BL DIVIDE          	// ones digit will be in R0; tens digit in R1
+  e0:	eb00001d 	bl	15c <DIVIDE>
+            MOV R9, R1          // save the tens digit
+  e4:	e1a09001 	mov	r9, r1
+            BL SEG7_CODE       
+  e8:	eb000023 	bl	17c <SEG7_CODE>
+            MOV R4, R0          // save bit code
+  ec:	e1a04000 	mov	r4, r0
+            MOV R0, R9          // retrieve the tens digit, get bit code
+  f0:	e1a00009 	mov	r0, r9
+            BL SEG7_CODE       
+  f4:	eb000020 	bl	17c <SEG7_CODE>
+            LSL R0, #8
+  f8:	e1a00400 	lsl	r0, r0, #8
+            ORR R4, R0
+  fc:	e1844000 	orr	r4, r4, r0
+			MOV R0, R6			// display R6 on HEX3-2
+ 100:	e1a00006 	mov	r0, r6
+			BL DIVIDE          	// ones digit will be in R0; tens digit in R1
+ 104:	eb000014 	bl	15c <DIVIDE>
+            MOV R9, R1          // save the tens digit
+ 108:	e1a09001 	mov	r9, r1
+            BL SEG7_CODE
+ 10c:	eb00001a 	bl	17c <SEG7_CODE>
+			LSL r0, #16
+ 110:	e1a00800 	lsl	r0, r0, #16
+            ORR R4, R0          // save bit code
+ 114:	e1844000 	orr	r4, r4, r0
+            MOV R0, R9          // retrieve the tens digit, get bit code
+ 118:	e1a00009 	mov	r0, r9
+            BL SEG7_CODE       
+ 11c:	eb000016 	bl	17c <SEG7_CODE>
+            LSL R0, #24
+ 120:	e1a00c00 	lsl	r0, r0, #24
+            ORR R4, R0
+ 124:	e1844000 	orr	r4, r4, r0
+            STR R4, [R8]        // display the numbers from R6 and R5
+ 128:	e5884000 	str	r4, [r8]
+            LDR R8, =0xFF200030 // base address of HEX5-HEX4
+ 12c:	e59f809c 	ldr	r8, [pc, #156]	; 1d0 <TEST_NUM+0x30>
+			MOV R0, R7			// display R7 on HEX5-4
+ 130:	e1a00007 	mov	r0, r7
+			BL DIVIDE          	// ones digit will be in R0; tens digit in R1
+ 134:	eb000008 	bl	15c <DIVIDE>
+            MOV R9, R1          // save the tens digit
+ 138:	e1a09001 	mov	r9, r1
+            BL SEG7_CODE       
+ 13c:	eb00000e 	bl	17c <SEG7_CODE>
+            MOV R4, R0          // save bit code
+ 140:	e1a04000 	mov	r4, r0
+            MOV R0, R9          // retrieve the tens digit, get bit code
+ 144:	e1a00009 	mov	r0, r9
+            BL SEG7_CODE       
+ 148:	eb00000b 	bl	17c <SEG7_CODE>
+            LSL R0, #8
+ 14c:	e1a00400 	lsl	r0, r0, #8
+            ORR R4, R0
+ 150:	e1844000 	orr	r4, r4, r0
+            STR R4, [R8]        // display the number from R7
+ 154:	e5884000 	str	r4, [r8]
+			B END
+ 158:	ea00000b 	b	18c <END>
+
+0000015c <DIVIDE>:
+
+/* Subroutine to perform the integer division R0 / 10.
+* Returns: quotient in R1, and remainder in R0
+*/
+DIVIDE: 	MOV R2, #0
+ 15c:	e3a02000 	mov	r2, #0
+
+00000160 <CONT>:
+CONT: 		CMP R0, #10
+ 160:	e350000a 	cmp	r0, #10
+			BLT DIV_END
+ 164:	ba000002 	blt	174 <DIV_END>
+			SUB R0, #10
+ 168:	e240000a 	sub	r0, r0, #10
+			ADD R2, #1
+ 16c:	e2822001 	add	r2, r2, #1
+			B CONT
+ 170:	eafffffa 	b	160 <CONT>
+
+00000174 <DIV_END>:
+DIV_END: 	MOV R1, R2 				// quotient in R1 (remainder in R0)
+ 174:	e1a01002 	mov	r1, r2
+			MOV PC, LR
+ 178:	e1a0f00e 	mov	pc, lr
+
+0000017c <SEG7_CODE>:
+
+/* Subroutine to convert the digits from 0 to 9 to be shown on a HEX display.
+ *    Parameters: R0 = the decimal value of the digit to be displayed
+ *    Returns: R0 = bit patterm to be written to the HEX display
+ */
+SEG7_CODE:  MOV R1, #BIT_CODES  
+ 17c:	e3a01e19 	mov	r1, #400	; 0x190
+            ADD R1, R0         		// index into the BIT_CODES "array"
+ 180:	e0811000 	add	r1, r1, r0
+            LDRB R0, [R1]       	// load the bit pattern (to be returned)
+ 184:	e5d10000 	ldrb	r0, [r1]
+            MOV PC, LR              
+ 188:	e1a0f00e 	mov	pc, lr
+
+0000018c <END>:
+
+END:    	B END             
+ 18c:	eafffffe 	b	18c <END>
+
+00000190 <BIT_CODES>:
+ 190:	4f5b063f 	.word	0x4f5b063f
+ 194:	077d6d66 	.word	0x077d6d66
+ 198:	0000677f 	.word	0x0000677f
+
+0000019c <ALT_NUM>:
+ 19c:	55555555 	.word	0x55555555
+
+000001a0 <TEST_NUM>:
+ 1a0:	103fe00f 	.word	0x103fe00f
+ 1a4:	420b1a23 	.word	0x420b1a23
+ 1a8:	11111111 	.word	0x11111111
+ 1ac:	00000003 	.word	0x00000003
+ 1b0:	00000001 	.word	0x00000001
+ 1b4:	ffffffff 	.word	0xffffffff
+ 1b8:	12345678 	.word	0x12345678
+ 1bc:	9abcdef0 	.word	0x9abcdef0
+ 1c0:	42042069 	.word	0x42042069
+ 1c4:	fedcba98 	.word	0xfedcba98
+ 1c8:	00000000 	.word	0x00000000
+ 1cc:	ff200020 	.word	0xff200020
+ 1d0:	ff200030 	.word	0xff200030

@@ -1,0 +1,170 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Hayde/Documents/UofT Engineering/Third Year/Second Semester/ECE243/Labs/Lab 2/part3.Verilog/ModelSim
+vdec3to8
+Z1 !s110 1580689261
+!i10b 1
+!s100 Z<CXK8OnaFLoHm`6D_RB]2
+I6]zLVOOV:MNTk;9G?i39m0
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z3 w1580321333
+Z4 8../proc.v
+Z5 F../proc.v
+L0 241
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1580689261.000000
+Z8 !s107 ../proc.v|../part3.v|../inst_mem.v|../flipflop.v|
+Z9 !s90 -reportprogress|300|../flipflop.v|../inst_mem.v|../part3.v|../proc.v|
+!i113 1
+Z10 tCvgOpt 0
+vflipflop
+R1
+!i10b 1
+!s100 4H2K_V>f3BSlSog@_SfWf0
+If;>LCi5HH2UkIZ<N0]YNc1
+R2
+R0
+w1467665240
+8../flipflop.v
+F../flipflop.v
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vinst_mem
+R1
+!i10b 1
+!s100 K4RmZIQj0T6D3l>Szck240
+Ia4X7][PRd9=TRP4J;ZKQ22
+R2
+R0
+w1540574124
+8../inst_mem.v
+F../inst_mem.v
+L0 39
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vpart3
+R1
+!i10b 1
+!s100 7eCYM9WGIkZ73iBOJzf]90
+I;9azIB@ec4MjgHB<78:g_1
+R2
+R0
+w1569877048
+8../part3.v
+F../part3.v
+L0 3
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vpc_count
+R1
+!i10b 1
+!s100 ;HDYRPejiF:D9B2<T^>6m1
+IRcRCRJ=fNAE25mTO]J]9@3
+R2
+R0
+R3
+R4
+R5
+L0 226
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vproc
+R1
+!i10b 1
+!s100 g[NnL@TBEKmgd3hIRJW;R3
+I>=fec<U<K;@2enlMDjXCZ3
+R2
+R0
+R3
+R4
+R5
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vregn
+R1
+!i10b 1
+!s100 =8A6TzClGa0^Pc@z2ED<@2
+Iol4BTRFYGH?;4e?ckCaVh1
+R2
+R0
+R3
+R4
+R5
+L0 259
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+vtestbench
+R1
+!i10b 1
+!s100 G?6VjBB;DCUjM2zXk9J9W1
+IG2RTOSY?jKdM^Wzz0_VTE2
+R2
+R0
+w1561833468
+8testbench.v
+Ftestbench.v
+L0 3
+R6
+r1
+!s85 0
+31
+R7
+!s107 testbench.v|
+!s90 -reportprogress|300|testbench.v|
+!i113 1
+R10
