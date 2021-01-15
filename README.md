@@ -1,1 +1,2 @@
-Projects from a second-year engineering course, ECE243 (Written in C, Assembly (ARMv7-A), and Verilog)
+# ECE243
+Projects from a second-year course on computer organization (Written in C, Assembly (ARMv7-A), and Verilog)
